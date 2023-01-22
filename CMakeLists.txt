@@ -18,7 +18,6 @@ include_directories(include)
 
 add_executable(
     vector_SUITE
-    vector.cpp
     vectorTest.cpp
     SmartVectorTest.cpp
 
