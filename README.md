@@ -1,3 +1,3 @@
 A simple implementation of std::vector.
 
-Future work: Make a SmartVector that utilises unique_ptr
+Future work: Use template so that vector can take any type.
