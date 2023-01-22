@@ -70,3 +70,17 @@ TEST(VectorTest, CopyAssignment)
     vec2 = vec;
     EXPECT_EQ(vec, vec2);
 }
+
+TEST(VectorTest, SizeNotEqual)
+{
+    auto vec {Vector<int>(1)};
+    vec.insert(1);
+    vec.insert(1);
+    vec.insert(5);
+
+    Vector<int> vec2;
+
+    vec2 = vec;
+    vec2.insert(5);
+    EXPECT_NE(vec.size(), vec2.size());
+}
