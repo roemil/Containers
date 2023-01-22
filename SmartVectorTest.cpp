@@ -1,48 +1,46 @@
 #include <gtest/gtest.h>
-
 #include "SmartVector.h"
-
 #include <iostream>
 
 TEST(SmartVectorTest, DefaultConstructorNoThrow)
 {
-    EXPECT_NO_THROW(Utility::SmartVector<int>());
+    EXPECT_NO_THROW(SmartVector<int>());
 }
 
 TEST(SmartVectorTest, ExplicitConstructorNoThrow)
 {
-    EXPECT_NO_THROW(Utility::SmartVector<int>(2));
+    EXPECT_NO_THROW(SmartVector<int>(2));
 }
 
 /*TEST(SmartVectorTest, ExplicitConstructorThrow)
 {
-    EXPECT_THROW(Utility::SmartVector(-1000), std::bad_alloc);
+    EXPECT_THROW(SmartVector(-1000), std::bad_alloc);
 }*/
 
 TEST(SmartVectorTest, InsertWithDefaultAllocation)
 {
-    auto vec {Utility::SmartVector<int>()};
+    auto vec {SmartVector<int>()};
     vec.insert(1);
     EXPECT_EQ(1, vec[0]);
 }
 
 TEST(SmartVectorTest, InsertWithCustomAllocation)
 {
-    auto vec {Utility::SmartVector<int>(1)};
+    auto vec {SmartVector<int>(1)};
     vec.insert(1);
     EXPECT_EQ(1, vec[0]);
 }
 
 TEST(SmartVectorTest, Size)
 {
-    auto vec {Utility::SmartVector<int>(1)};
+    auto vec {SmartVector<int>(1)};
     vec.insert(1);
     EXPECT_EQ(1, vec.size());
 }
 
 TEST(SmartVectorTest, InsertWithAllocationDuringInsert)
 {
-    auto vec {Utility::SmartVector<int>(1)};
+    auto vec {SmartVector<int>(1)};
     vec.insert(1);
     vec.insert(1);
     vec.insert(5);
@@ -51,7 +49,7 @@ TEST(SmartVectorTest, InsertWithAllocationDuringInsert)
 
 TEST(SmartVectorTest, CopyConstructor)
 {
-    auto vec {Utility::SmartVector<int>(1)};
+    auto vec {SmartVector<int>(1)};
     vec.insert(1);
     vec.insert(1);
     vec.insert(5);
@@ -62,7 +60,7 @@ TEST(SmartVectorTest, CopyConstructor)
 
 TEST(SmartVectorTest, MoveConstructor)
 {
-    auto vec {Utility::SmartVector<int>(1)};
+    auto vec {SmartVector<int>(1)};
     vec.insert(1);
     vec.insert(1);
     vec.insert(5);
@@ -75,12 +73,12 @@ TEST(SmartVectorTest, MoveConstructor)
 
 TEST(SmartVectorTest, CopyAssignment)
 {
-    auto vec {Utility::SmartVector<int>(1)};
+    auto vec {SmartVector<int>(1)};
     vec.insert(1);
     vec.insert(1);
     vec.insert(5);
 
-    Utility::SmartVector<int> vec2;
+    SmartVector<int> vec2;
 
     vec2 = vec;
     EXPECT_EQ(vec, vec2);

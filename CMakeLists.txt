@@ -20,7 +20,7 @@ add_executable(
     vector_SUITE
     vectorTest.cpp
     SmartVectorTest.cpp
-
+    TestMain.cpp
 )
 target_link_libraries(
     vector_SUITE gtest_main
