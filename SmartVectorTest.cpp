@@ -83,3 +83,30 @@ TEST(SmartVectorTest, CopyAssignment)
     vec2 = vec;
     EXPECT_EQ(vec, vec2);
 }
+
+TEST(SmartVectorTest, SizeEqual)
+{
+    auto vec {SmartVector<int>(1)};
+    vec.insert(1);
+    vec.insert(1);
+    vec.insert(5);
+
+    SmartVector<int> vec2;
+
+    vec2 = vec;
+    EXPECT_EQ(vec.size(), vec2.size());
+}
+
+TEST(SmartVectorTest, SizeNotEqual)
+{
+    auto vec {SmartVector<int>(1)};
+    vec.insert(1);
+    vec.insert(1);
+    vec.insert(5);
+
+    SmartVector<int> vec2;
+
+    vec2 = vec;
+    vec2.insert(5);
+    EXPECT_NE(vec.size(), vec2.size());
+}
