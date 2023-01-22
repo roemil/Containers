@@ -60,6 +60,19 @@ TEST(SmartVectorTest, CopyConstructor)
     EXPECT_EQ(vec, vec2);
 }
 
+TEST(SmartVectorTest, MoveConstructor)
+{
+    auto vec {Utility::SmartVector(1)};
+    vec.insert(1);
+    vec.insert(1);
+    vec.insert(5);
+
+    auto vec2 = std::move(vec);
+    EXPECT_EQ(1, vec2[0]);
+    EXPECT_EQ(1, vec2[1]);
+    EXPECT_EQ(5, vec2[2]);
+}
+
 TEST(SmartVectorTest, CopyAssignment)
 {
     auto vec {Utility::SmartVector(1)};

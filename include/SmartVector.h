@@ -11,9 +11,11 @@ namespace Utility
             explicit SmartVector(const int& n);
             ~SmartVector() = default;
             SmartVector(const SmartVector& other);
+            SmartVector(SmartVector&& other);
             
             SmartVector& insert(const int& n);
             const int size() const {return size_; };
+            std::unique_ptr<int[]> getData() {return std::move(data_);};
 
             int operator[] (int index) const
             {

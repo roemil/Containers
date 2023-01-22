@@ -33,6 +33,11 @@ namespace Utility
         }
     }
 
+    SmartVector::SmartVector(SmartVector&& other) : SmartVector(other.size())
+    {
+        data_ = std::move(other.getData());
+    }
+
     SmartVector& SmartVector::insert(const int& n)
     {
         if(size_ >= capacity)
