@@ -6,12 +6,12 @@
 
 TEST(SmartVectorTest, DefaultConstructorNoThrow)
 {
-    EXPECT_NO_THROW(Utility::SmartVector());
+    EXPECT_NO_THROW(Utility::SmartVector<int>());
 }
 
 TEST(SmartVectorTest, ExplicitConstructorNoThrow)
 {
-    EXPECT_NO_THROW(Utility::SmartVector(2));
+    EXPECT_NO_THROW(Utility::SmartVector<int>(2));
 }
 
 /*TEST(SmartVectorTest, ExplicitConstructorThrow)
@@ -21,28 +21,28 @@ TEST(SmartVectorTest, ExplicitConstructorNoThrow)
 
 TEST(SmartVectorTest, InsertWithDefaultAllocation)
 {
-    auto vec {Utility::SmartVector()};
+    auto vec {Utility::SmartVector<int>()};
     vec.insert(1);
     EXPECT_EQ(1, vec[0]);
 }
 
 TEST(SmartVectorTest, InsertWithCustomAllocation)
 {
-    auto vec {Utility::SmartVector(1)};
+    auto vec {Utility::SmartVector<int>(1)};
     vec.insert(1);
     EXPECT_EQ(1, vec[0]);
 }
 
 TEST(SmartVectorTest, Size)
 {
-    auto vec {Utility::SmartVector(1)};
+    auto vec {Utility::SmartVector<int>(1)};
     vec.insert(1);
     EXPECT_EQ(1, vec.size());
 }
 
 TEST(SmartVectorTest, InsertWithAllocationDuringInsert)
 {
-    auto vec {Utility::SmartVector(1)};
+    auto vec {Utility::SmartVector<int>(1)};
     vec.insert(1);
     vec.insert(1);
     vec.insert(5);
@@ -51,7 +51,7 @@ TEST(SmartVectorTest, InsertWithAllocationDuringInsert)
 
 TEST(SmartVectorTest, CopyConstructor)
 {
-    auto vec {Utility::SmartVector(1)};
+    auto vec {Utility::SmartVector<int>(1)};
     vec.insert(1);
     vec.insert(1);
     vec.insert(5);
@@ -62,7 +62,7 @@ TEST(SmartVectorTest, CopyConstructor)
 
 TEST(SmartVectorTest, MoveConstructor)
 {
-    auto vec {Utility::SmartVector(1)};
+    auto vec {Utility::SmartVector<int>(1)};
     vec.insert(1);
     vec.insert(1);
     vec.insert(5);
@@ -75,12 +75,12 @@ TEST(SmartVectorTest, MoveConstructor)
 
 TEST(SmartVectorTest, CopyAssignment)
 {
-    auto vec {Utility::SmartVector(1)};
+    auto vec {Utility::SmartVector<int>(1)};
     vec.insert(1);
     vec.insert(1);
     vec.insert(5);
 
-    Utility::SmartVector vec2;
+    Utility::SmartVector<int> vec2;
 
     vec2 = vec;
     EXPECT_EQ(vec, vec2);

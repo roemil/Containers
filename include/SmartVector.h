@@ -1,10 +1,11 @@
 #pragma once
 #include <algorithm>
 #include <memory>
+#include "Container.h"
 
 namespace Utility
 {
-    class SmartVector
+    template<class T> class SmartVector
     {
         public:
             SmartVector();
@@ -13,9 +14,9 @@ namespace Utility
             SmartVector(const SmartVector& other);
             SmartVector(SmartVector&& other);
             
-            SmartVector& insert(const int& n);
+            SmartVector& insert(const T& n);
             const int size() const {return size_; };
-            std::unique_ptr<int[]> getData() {return std::move(data_);};
+            std::unique_ptr<T[]> getData() {return std::move(data_);};
 
             int operator[] (int index) const
             {
@@ -47,8 +48,69 @@ namespace Utility
         }
 
         private:
-            std::unique_ptr<int[]> data_;
+            std::unique_ptr<T[]> data_;
             int size_ = 0;
             int capacity;
     };
+
+    template<class T>
+    SmartVector<T>::SmartVector()
+    {
+        data_ = std::make_unique<int[]>(1);
+        capacity = 1;
+        if(!data_)
+        {
+            throw std::bad_alloc();
+        }
+    }
+    template<class T>
+    SmartVector<T>::SmartVector(const int& n)
+    {
+        data_ = std::make_unique<int[]>(n);
+        if(!data_)
+        {
+            throw std::bad_alloc();
+        }
+        capacity = n;
+    }
+
+    template<class T>
+    SmartVector<T>::SmartVector(const SmartVector& other) : SmartVector(other.size())
+    {
+        for(int i = 0; i < other.size(); ++i)
+        {
+            insert(other[i]);
+        }
+    }
+
+    template<class T>
+    SmartVector<T>::SmartVector(SmartVector&& other) : SmartVector(other.size())
+    {
+        data_ = std::move(other.getData());
+    }
+
+    template <class T>
+    SmartVector<T>& SmartVector<T>::insert(const T& n)
+    {
+        if(size_ >= capacity)
+        {
+            std::unique_ptr<T[]> tmp = std::make_unique<T[]>(capacity *= 2);
+            if(!tmp)
+            {
+                throw std::bad_alloc();
+            }
+            for(int i = 0; i < size_; ++i)
+            {
+                tmp[i] = data_[i];
+            }
+            tmp[size_++] = n;
+            data_.reset();
+            data_ = std::move(tmp);
+        }
+        else
+        {
+            data_[size_++] = n;
+        }
+        return *this;
+    }
 }
