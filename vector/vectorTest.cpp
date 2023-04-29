@@ -24,6 +24,14 @@ TEST(VectorTest, InsertWithDefaultAllocation)
     EXPECT_EQ(1, vec[0]);
 }
 
+TEST(VectorTest, listInitializator)
+{
+    Vector<int> vec {1,2,3,4};
+    EXPECT_EQ(1, vec[0]);
+    EXPECT_EQ(vec.size(), 4);
+}
+
+
 TEST(VectorTest, InsertWithCustomAllocation)
 {
     auto vec {Vector<int>(1)};
@@ -83,4 +91,14 @@ TEST(VectorTest, SizeNotEqual)
     vec2 = vec;
     vec2.insert(5);
     EXPECT_NE(vec.size(), vec2.size());
+}
+
+TEST(VectorTest, rangeBasedLoop)
+{
+    Vector<int> vec {12,3,4,5};
+    int count = 0;
+    for(const auto& elem : vec)
+    {
+        EXPECT_EQ(elem, vec[count++]);
+    }
 }

@@ -1,13 +1,26 @@
 #pragma once
 #include <algorithm>
+#include <initializer_list>
 
 template<class T> class Vector
 {
     public:
         Vector();
         explicit Vector(const int& n);
+        explicit Vector(std::initializer_list<T> l ) : Vector(l.size())
+        {
+            for(auto elem : l)
+            {
+                insert(elem);
+            }
+        };
         ~Vector();
         Vector(const Vector& other);
+
+        T* begin() {return data_;};
+        T* end() {return data_+size_;};
+        T* cbegin() const {return data_;};
+        T* cend() const {return data_+size_;};
         
         Vector<T>& insert(const T& n);
         const int size() const {return size_; };

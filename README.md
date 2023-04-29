@@ -1,3 +1,3 @@
-A simple implementation of std::vector.
+A simple implementation of std::vector and std::array.
 
-TODO: Implement iterators
+TODO: Implement Typed Tests
