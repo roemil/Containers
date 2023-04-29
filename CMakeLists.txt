@@ -14,18 +14,19 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-include_directories(include)
+include_directories(array/include)
+include_directories(vector/include)
 
 add_executable(
-    vector_SUITE
-    vectorTest.cpp
-    SmartVectorTest.cpp
-    arrayTest.cpp
+    container_SUITE
+    vector/vectorTest.cpp
+    vector/SmartVectorTest.cpp
+    array/arrayTest.cpp
     TestMain.cpp
 )
 target_link_libraries(
-    vector_SUITE gtest_main
+    container_SUITE gtest_main
 )
  
 include(GoogleTest)
-gtest_discover_tests(vector_SUITE)
+gtest_discover_tests(container_SUITE)
