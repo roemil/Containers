@@ -94,6 +94,14 @@ TEST(ArrayTest, equal)
     EXPECT_EQ(arr, arr2);
 }
 
+TEST(ArrayTest, notEqual)
+{
+    const std::size_t size = 3;
+    Array<int, size> arr{1,2,3};
+    Array<int, size> arr2{1,2,4};
+    EXPECT_NE(arr, arr2);
+}
+
 TEST(ArrayTest, copyAssignment)
 {
     const std::size_t size = 3;

@@ -61,3 +61,9 @@ constexpr bool operator==(const Array<T, Size>& lh, const Array<T, Size>& rh)
     }
     return true;
 }
+
+template<typename T, std::size_t Size>
+constexpr bool operator!=(const Array<T, Size>& lh, const Array<T, Size>& rh)
+{
+    return !(lh == rh);
+}
