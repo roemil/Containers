@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "vector.h"
+#include "include/vector.h"
 #include <iostream>
 
 TEST(VectorTest, DefaultConstructorNoThrow)
