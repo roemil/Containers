@@ -16,13 +16,7 @@ template<class T> class Vector
         };
         ~Vector();
         Vector(const Vector& other);
-        Vector(Vector&& rh)
-        {
-
-            std::swap(this->data_, rh.data_);
-            std::swap(this->size_, rh.size_);
-            std::swap(this->capacity, rh.capacity);
-        };
+        Vector(Vector&& rh);
 
         T* begin() {return data_;};
         T* end() {return data_+size_;};
@@ -87,6 +81,13 @@ Vector<T>::Vector(const int& n)
     }
     capacity = n;
 }
+template<class T>
+Vector<T>::Vector(Vector&& rh)
+{
+    std::swap(this->data_, rh.data_);
+    std::swap(this->size_, rh.size_);
+    std::swap(this->capacity, rh.capacity);
+};
 template<class T>
 Vector<T>::~Vector()
 {
