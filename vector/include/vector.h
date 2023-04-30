@@ -26,8 +26,8 @@ template<class T> class Vector
 
         T* begin() {return data_;};
         T* end() {return data_+size_;};
-        T* cbegin() const {return data_;};
-        T* cend() const {return data_+size_;};
+        const T* begin() const {return data_;};
+        const T* end() const {return data_+size_;};
         
         Vector<T>& insert(const T& n);
         const int size() const {return size_; };

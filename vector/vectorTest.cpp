@@ -111,12 +111,12 @@ TEST(VectorTest, moveCtor)
     EXPECT_EQ(v2, vCopy);
 }
 
-// TEST(VectorTest, constRangeBasedLoop)
-// {
-//     const Vector<int> vec {12,3,4,5};
-//     int count = 0;
-//     for(const auto& elem : vec)
-//     {
-//         EXPECT_EQ(elem, vec[count++]);
-//     }
-// }
+TEST(VectorTest, constRangeBasedLoop)
+{
+    const Vector<int> vec {12,3,4,5};
+    int count = 0;
+    for(const auto& elem : vec)
+    {
+        EXPECT_EQ(elem, vec[count++]);
+    }
+}
