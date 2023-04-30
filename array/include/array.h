@@ -34,16 +34,24 @@ template<typename T, std::size_t Size> struct Array
         }
 
         constexpr bool operator==(const Array<T, Size>& rh) const
-{
-    for(decltype(Size) i = 0; i < Size; ++i)
-    {
-        if(array_[i] != rh.array_[i])
         {
-            return false;
+            for(decltype(Size) i = 0; i < Size; ++i)
+            {
+                if(array_[i] != rh.array_[i])
+                {
+                    return false;
+                }
+            }
+            return true;
         }
-    }
-    return true;
-}
+
+        constexpr void fill(const T& value)
+        {
+            for(auto& elem : array_)
+            {
+                elem = value;
+            }
+        }
 
 };
 

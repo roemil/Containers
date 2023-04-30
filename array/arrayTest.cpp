@@ -109,3 +109,14 @@ TEST(ArrayTest, constCopyAssignment)
     const auto arr2 = arr;
     EXPECT_EQ(arr, arr2);
 }
+
+TEST(ArrayTest, constFill)
+{
+    const std::size_t size = 3;
+    Array<int, size> arr;
+    arr.fill(3);
+    for(const auto& elem : arr)
+    {
+        EXPECT_EQ(elem, 3);
+    }
+}
