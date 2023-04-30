@@ -120,3 +120,17 @@ TEST(ArrayTest, constFill)
         EXPECT_EQ(elem, 3);
     }
 }
+
+TEST(ArrayTest, size)
+{
+    const std::size_t size = 3;
+    Array<int, size> arr{1,2};
+    EXPECT_EQ(arr.size(), 3);
+}
+
+TEST(ArrayTest, maxSize)
+{
+    const std::size_t size = 3;
+    Array<int, size> arr{1,2};
+    EXPECT_EQ(arr.size(), 3);
+}

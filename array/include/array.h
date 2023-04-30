@@ -12,6 +12,7 @@ template<typename T, std::size_t Size> struct Array
         constexpr T* cend() const {return array_+Size;}
 
         constexpr std::size_t size() noexcept {return Size;}
+        constexpr auto maxSize() noexcept {size();}
         constexpr T& operator[](const std::size_t ind) noexcept {return array_[ind];}
         constexpr Array<T, Size> operator=(const Array& rh)
         {
