@@ -81,9 +81,8 @@ Vector<T>::Vector(const int& n)
     }
     capacity = n;
 }
-template<class T>
-Vector<T>::Vector(Vector&& rh)
-{
+
+template <class T> Vector<T>::Vector(Vector &&rh) {
     std::swap(this->data_, rh.data_);
     std::swap(this->size_, rh.size_);
     std::swap(this->capacity, rh.capacity);

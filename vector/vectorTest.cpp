@@ -12,11 +12,6 @@ TEST(VectorTest, ExplicitConstructorNoThrow)
     EXPECT_NO_THROW(Vector<int>(2));
 }
 
-/*TEST(VectorTest, ExplicitConstructorThrow)
-{
-    EXPECT_THROW(Vector<int>(-1000), std::bad_alloc);
-}*/
-
 TEST(VectorTest, InsertWithDefaultAllocation)
 {
     auto vec {Vector<int>()};
