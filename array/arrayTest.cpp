@@ -85,3 +85,27 @@ TEST(ArrayTest, swapOnNonClassFunc)
     swap(arr, arr2);
     EXPECT_EQ(arr[0], 2);
 }
+
+TEST(ArrayTest, equal)
+{
+    const std::size_t size = 3;
+    Array<int, size> arr{1,2,3};
+    Array<int, size> arr2{1,2,3};
+    EXPECT_EQ(arr, arr2);
+}
+
+TEST(ArrayTest, copyAssignment)
+{
+    const std::size_t size = 3;
+    Array<int, size> arr{1,2,3};
+    auto arr2 = arr;
+    EXPECT_EQ(arr, arr2);
+}
+
+TEST(ArrayTest, constCopyAssignment)
+{
+    const std::size_t size = 3;
+    const Array<int, size> arr{1,2,3};
+    const auto arr2 = arr;
+    EXPECT_EQ(arr, arr2);
+}

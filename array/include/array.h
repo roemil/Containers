@@ -13,6 +13,10 @@ template<typename T, std::size_t Size> struct Array
 
         constexpr std::size_t size() noexcept {return Size;}
         constexpr T& operator[](const std::size_t ind) noexcept {return array_[ind];}
+        constexpr Array<T, Size> operator=(const Array& rh)
+        {
+            T array_[Size] = rh.array_;
+        }
 
         constexpr T& at(const std::size_t ind) noexcept {return array_[ind];}
         constexpr T& at(const std::size_t ind) const noexcept {return array_[ind];}
@@ -29,7 +33,20 @@ template<typename T, std::size_t Size> struct Array
             return *this;
         }
 
+        constexpr bool operator==(const Array<T, Size>& rh) const
+{
+    for(decltype(Size) i = 0; i < Size; ++i)
+    {
+        if(array_[i] != rh.array_[i])
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
 };
+
 template<typename T, std::size_t Size>
 constexpr void swap(Array<T, Size>& lh, Array<T, Size>& rh)
 {
