@@ -16,6 +16,13 @@ template<class T> class Vector
         };
         ~Vector();
         Vector(const Vector& other);
+        Vector(Vector&& rh)
+        {
+
+            std::swap(this->data_, rh.data_);
+            std::swap(this->size_, rh.size_);
+            std::swap(this->capacity, rh.capacity);
+        };
 
         T* begin() {return data_;};
         T* end() {return data_+size_;};
@@ -55,9 +62,9 @@ template<class T> class Vector
     }
 
     private:
-        int* data_;
-        int size_ = 0;
-        int capacity;
+        int* data_ = nullptr;
+        int size_{};
+        int capacity{};
 };
 
 template<class T>
