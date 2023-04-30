@@ -34,18 +34,6 @@ template<typename T, std::size_t Size> struct Array
             return *this;
         }
 
-        constexpr bool operator==(const Array<T, Size>& rh) const
-        {
-            for(decltype(Size) i = 0; i < Size; ++i)
-            {
-                if(array_[i] != rh.array_[i])
-                {
-                    return false;
-                }
-            }
-            return true;
-        }
-
         constexpr void fill(const T& value)
         {
             for(auto& elem : array_)
@@ -60,4 +48,16 @@ template<typename T, std::size_t Size>
 constexpr void swap(Array<T, Size>& lh, Array<T, Size>& rh)
 {
     std::swap(lh.array_, rh.array_);
+}
+template<typename T, std::size_t Size>
+constexpr bool operator==(const Array<T, Size>& lh, const Array<T, Size>& rh)
+{
+    for(decltype(Size) i = 0; i < Size; ++i)
+    {
+        if(lh.array_[i] != rh.array_[i])
+        {
+            return false;
+        }
+    }
+    return true;
 }
