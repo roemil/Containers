@@ -56,15 +56,15 @@ template<class T> class Vector
     }
 
     private:
-        int* data_ = nullptr;
         int size_{};
         int capacity{};
+        T* data_{};
 };
 
 template<class T>
 Vector<T>::Vector()
 {
-    data_ = new T[1];
+    data_ = (T*)new T[1];
     capacity = 1;
     if(!data_)
     {
@@ -74,7 +74,7 @@ Vector<T>::Vector()
 template<class T>
 Vector<T>::Vector(const int& n)
 {
-    data_ = new T[n];
+    data_ = (T*)new T[n];
     if(!data_)
     {
         throw std::bad_alloc();
@@ -82,7 +82,8 @@ Vector<T>::Vector(const int& n)
     capacity = n;
 }
 
-template <class T> Vector<T>::Vector(Vector &&rh) {
+template <class T>
+Vector<T>::Vector(Vector &&rh) {
     std::swap(this->data_, rh.data_);
     std::swap(this->size_, rh.size_);
     std::swap(this->capacity, rh.capacity);
@@ -92,6 +93,10 @@ Vector<T>::~Vector()
 {
     if(data_)
     {
+        for(int i = 0; i < size(); ++i)
+        {
+            data_[i].~T();
+        }
         delete[] data_;
     }
 }

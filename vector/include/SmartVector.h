@@ -1,25 +1,45 @@
 #pragma once
 #include <algorithm>
 #include <memory>
+#include <type_traits>
+#include <iostream>
 
 template<class T> class SmartVector
 {
     public:
         SmartVector();
         explicit SmartVector(const int& n);
-        ~SmartVector() = default;
+        ~SmartVector();
         SmartVector(const SmartVector& other);
-        SmartVector(SmartVector&& other);
+        SmartVector(SmartVector&& other) noexcept(std::is_nothrow_move_constructible_v<T>);
+        explicit SmartVector(std::initializer_list<T> list ) : SmartVector(list.size())
+        {
+            for(const auto& elem : list)
+            {
+                insert(elem);
+            }
+        };
         
         SmartVector& insert(const T& n);
         const int size() const {return size_; };
-        std::unique_ptr<T[]> getData() {return std::move(data_);};
-
-        int operator[] (int index) const
+        T* data()
         {
-            return data_[index];
+            return reinterpret_cast<T*>(data_);
         }
-        int operator==(const SmartVector& other) const
+        const T* data() const
+        {
+            return reinterpret_cast<const T*>(data_.get());
+        }
+
+        const T& operator[] (int index) const
+        {
+            return *reinterpret_cast<const T*>(&data_[index]);
+        }
+        T& operator[] (int index)
+        {
+            return *reinterpret_cast<T*>(&data_[index]);
+        }
+        bool operator==(const SmartVector& other) const
         {
             if(size_ != other.size())
             {
@@ -27,7 +47,7 @@ template<class T> class SmartVector
             }
             for(int i = 0; i < size_; ++i)
             {
-                if(data_[i] != other[i])
+                if(data()[i] != other[i])
                 {
                     return false;
                 }
@@ -45,15 +65,37 @@ template<class T> class SmartVector
     }
 
     private:
-        std::unique_ptr<T[]> data_;
-        int size_ = 0;
-        int capacity;
+        using RawData = std::aligned_storage_t<sizeof(T), alignof(T)>;
+        std::unique_ptr<RawData[]> data_;
+        int size_ {};
+        int capacity {};
+
+        // Helper fun to get element at index
+        T& getElem(const int index);
 };
+
+template<class T>
+T& SmartVector<T>::getElem(const int index)
+{
+    return *reinterpret_cast<T*>(&data_[index]);
+}    
+
+template<class T>
+SmartVector<T>::~SmartVector()
+{
+    if(data_)
+    {
+        for(int i = 0; i < size(); ++i)
+        {
+            getElem(i).~T();
+        }
+    }
+}
 
 template<class T>
 SmartVector<T>::SmartVector()
 {
-    data_ = std::make_unique<int[]>(1);
+    data_ = std::make_unique<RawData[]>(1);
     capacity = 1;
     if(!data_)
     {
@@ -63,7 +105,7 @@ SmartVector<T>::SmartVector()
 template<class T>
 SmartVector<T>::SmartVector(const int& n)
 {
-    data_ = std::make_unique<int[]>(n);
+    data_ = std::make_unique<RawData[]>(n);
     if(!data_)
     {
         throw std::bad_alloc();
@@ -81,9 +123,11 @@ SmartVector<T>::SmartVector(const SmartVector& other) : SmartVector(other.size()
 }
 
 template<class T>
-SmartVector<T>::SmartVector(SmartVector&& other) : SmartVector(other.size())
+SmartVector<T>::SmartVector(SmartVector&& other) noexcept(std::is_nothrow_move_constructible_v<T>)
 {
-    data_ = std::move(other.getData());
+    std::swap(size_, other.size_);
+    std::swap(capacity, other.capacity);
+    std::swap(data_, other.data_);
 }
 
 template <class T>
@@ -91,7 +135,7 @@ SmartVector<T>& SmartVector<T>::insert(const T& n)
 {
     if(size_ >= capacity)
     {
-        std::unique_ptr<T[]> tmp = std::make_unique<T[]>(capacity *= 2);
+        auto tmp = std::make_unique<RawData[]>(capacity *= 2);
         if(!tmp)
         {
             throw std::bad_alloc();
@@ -100,13 +144,13 @@ SmartVector<T>& SmartVector<T>::insert(const T& n)
         {
             tmp[i] = data_[i];
         }
-        tmp[size_++] = n;
+        new(reinterpret_cast<T*>(&tmp[size_++])) T{n};
         data_.reset();
         data_ = std::move(tmp);
     }
     else
     {
-        data_[size_++] = n;
+        new(reinterpret_cast<T*>(&data_[size_++])) T{n};
     }
     return *this;
 }

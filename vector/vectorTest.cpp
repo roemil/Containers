@@ -14,9 +14,16 @@ TEST(VectorTest, ExplicitConstructorNoThrow)
 
 TEST(VectorTest, InsertWithDefaultAllocation)
 {
-    auto vec {Vector<int>()};
+    Vector<int> vec {};
     vec.insert(1);
     EXPECT_EQ(1, vec[0]);
+}
+
+TEST(VectorTest, string)
+{
+    Vector<std::string> vec {};
+    vec.insert("1");
+    EXPECT_EQ("1", vec[0]);
 }
 
 TEST(VectorTest, listInitializator)
@@ -27,23 +34,23 @@ TEST(VectorTest, listInitializator)
 }
 
 
-TEST(VectorTest, InsertWithCustomAllocation)
+TEST(VectorTest, CreateWithValue)
 {
-    auto vec {Vector<int>(1)};
-    vec.insert(1);
+    Vector<int> vec {1};
+    vec.insert(2);
     EXPECT_EQ(1, vec[0]);
 }
 
 TEST(VectorTest, Size)
 {
-    auto vec {Vector<int>(1)};
+    Vector<int> vec(1);
     vec.insert(1);
     EXPECT_EQ(1, vec.size());
 }
 
-TEST(VectorTest, InsertWithAllocationDuringInsert)
+TEST(VectorTest, InsertWithSizeAllocationDuringInsert)
 {
-    auto vec {Vector<int>(1)};
+    Vector<int> vec(1);
     vec.insert(1);
     vec.insert(1);
     vec.insert(5);
@@ -52,7 +59,7 @@ TEST(VectorTest, InsertWithAllocationDuringInsert)
 
 TEST(VectorTest, CopyConstructor)
 {
-    auto vec {Vector<int>(1)};
+    Vector<int> vec {};
     vec.insert(1);
     vec.insert(1);
     vec.insert(5);
@@ -63,7 +70,7 @@ TEST(VectorTest, CopyConstructor)
 
 TEST(VectorTest, CopyAssignment)
 {
-    auto vec {Vector<int>(1)};
+    Vector<int> vec {};
     vec.insert(1);
     vec.insert(1);
     vec.insert(5);
@@ -76,7 +83,7 @@ TEST(VectorTest, CopyAssignment)
 
 TEST(VectorTest, SizeNotEqual)
 {
-    auto vec {Vector<int>(1)};
+    Vector<int> vec {};
     vec.insert(1);
     vec.insert(1);
     vec.insert(5);
@@ -90,7 +97,7 @@ TEST(VectorTest, SizeNotEqual)
 
 TEST(VectorTest, rangeBasedLoop)
 {
-    Vector<int> vec {12,3,4,5};
+    const Vector<int> vec {12,3,4,5};
     int count = 0;
     for(const auto& elem : vec)
     {
@@ -101,8 +108,8 @@ TEST(VectorTest, rangeBasedLoop)
 TEST(VectorTest, moveCtor)
 {
     Vector<int> vec {12,3,4,5};
-    auto vCopy = vec;
-    auto v2 {std::move(vec)};
+    const auto vCopy = vec;
+    const auto v2 {std::move(vec)};
     EXPECT_EQ(v2, vCopy);
 }
 

@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "SmartVector.h"
+#include "include/SmartVector.h"
 #include <iostream>
 
 TEST(SmartVectorTest, DefaultConstructorNoThrow)
@@ -12,14 +12,9 @@ TEST(SmartVectorTest, ExplicitConstructorNoThrow)
     EXPECT_NO_THROW(SmartVector<int>(2));
 }
 
-/*TEST(SmartVectorTest, ExplicitConstructorThrow)
-{
-    EXPECT_THROW(SmartVector(-1000), std::bad_alloc);
-}*/
-
 TEST(SmartVectorTest, InsertWithDefaultAllocation)
 {
-    auto vec {SmartVector<int>()};
+    SmartVector<int> vec{};
     vec.insert(1);
     EXPECT_EQ(1, vec[0]);
 }
@@ -33,8 +28,21 @@ TEST(SmartVectorTest, InsertWithCustomAllocation)
 
 TEST(SmartVectorTest, Size)
 {
-    auto vec {SmartVector<int>(1)};
+    SmartVector<int> vec(1);
     vec.insert(1);
+    EXPECT_EQ(1, vec.size());
+}
+
+TEST(SmartVectorTest, listInitializator)
+{
+    SmartVector<int> vec {1,2,3,4};
+    EXPECT_EQ(1, vec[0]);
+    EXPECT_EQ(vec.size(), 4);
+}
+
+TEST(SmartVectorTest, string)
+{
+    SmartVector<std::string> vec {"hello"};
     EXPECT_EQ(1, vec.size());
 }
 
@@ -49,7 +57,7 @@ TEST(SmartVectorTest, InsertWithAllocationDuringInsert)
 
 TEST(SmartVectorTest, CopyConstructor)
 {
-    auto vec {SmartVector<int>(1)};
+    SmartVector<int> vec(3);
     vec.insert(1);
     vec.insert(1);
     vec.insert(5);
@@ -73,40 +81,25 @@ TEST(SmartVectorTest, MoveConstructor)
 
 TEST(SmartVectorTest, CopyAssignment)
 {
-    auto vec {SmartVector<int>(1)};
+    SmartVector<int> vec(3);
     vec.insert(1);
     vec.insert(1);
     vec.insert(5);
 
-    SmartVector<int> vec2;
+    const auto vec2 = vec;
 
-    vec2 = vec;
     EXPECT_EQ(vec, vec2);
 }
 
-TEST(SmartVectorTest, SizeEqual)
+TEST(SmartVectorTest, NotEqual)
 {
-    auto vec {SmartVector<int>(1)};
+    SmartVector<int> vec(3);
     vec.insert(1);
     vec.insert(1);
     vec.insert(5);
 
-    SmartVector<int> vec2;
+    SmartVector<int> vec2 = vec;
 
-    vec2 = vec;
-    EXPECT_EQ(vec.size(), vec2.size());
-}
-
-TEST(SmartVectorTest, SizeNotEqual)
-{
-    auto vec {SmartVector<int>(1)};
-    vec.insert(1);
-    vec.insert(1);
-    vec.insert(5);
-
-    SmartVector<int> vec2;
-
-    vec2 = vec;
     vec2.insert(5);
-    EXPECT_NE(vec.size(), vec2.size());
+    EXPECT_NE(vec, vec2);
 }
