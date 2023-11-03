@@ -21,7 +21,14 @@ template<class T> class SmartVector
                 insert(elem);
             }
         };
-        
+
+        template <typename... ArgsT>
+        SmartVector& emplace_back(ArgsT&& ...args)
+        {
+            emplace_back_helper(args...);
+            return *this;
+        }
+
         SmartVector& insert(const T& n);
         const int size() const {return size_; };
         T* data()
@@ -72,15 +79,25 @@ template<class T> class SmartVector
         int size_ {};
         int capacity {};
 
-        // Helper fun to get element at index
+        // Helper functions
         T& getElem(const int index);
+
+        template <typename TypeT, typename... ArgsT>
+        void emplace_back_helper(TypeT&& first, ArgsT&&... rest)
+        {
+            insert(std::forward<TypeT>(first));
+            if constexpr (sizeof...(rest) > 0)
+            {
+                emplace_back_helper(rest...);
+            }
+        }
 };
 
 template<class T>
 T& SmartVector<T>::getElem(const int index)
 {
     return *reinterpret_cast<T*>(&data_[index]);
-}    
+}
 
 template<class T>
 SmartVector<T>::~SmartVector()
