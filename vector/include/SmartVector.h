@@ -22,11 +22,28 @@ template<class T> class SmartVector
             }
         };
 
+        T& front()
+        {
+            return getElem(0);
+        }
+        const T& front() const
+        {
+            return getElem(0);
+        }
+        T& back()
+        {
+            return getElem(size_-1);
+        }
+        const T& back() const
+        {
+            return getElem(size_-1);
+        }
+
         template <typename... ArgsT>
-        SmartVector& emplace_back(ArgsT&& ...args)
+        T& emplace_back(ArgsT&& ...args)
         {
             emplace_back_helper(args...);
-            return *this;
+            return back();
         }
 
         SmartVector& insert(const T& n);
