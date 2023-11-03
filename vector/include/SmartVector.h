@@ -161,7 +161,7 @@ SmartVector<T>& SmartVector<T>::insert(const T& n)
         }
         for(int i = 0; i < size_; ++i)
         {
-            tmp[i] = data_[i];
+            tmp[i] = std::move(data_[i]);
         }
         new(reinterpret_cast<T*>(&tmp[size_++])) T{n};
         data_.reset();
