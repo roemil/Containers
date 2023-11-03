@@ -64,7 +64,7 @@ template<class T> class SmartVector
             return true;
         }
 
-    SmartVector& operator=(SmartVector other)
+    SmartVector& operator=(const SmartVector& other)
     {
         for(int i = 0; i < other.size(); ++i)
         {
