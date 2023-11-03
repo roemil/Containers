@@ -2,104 +2,114 @@
 #include "include/SmartVector.h"
 #include <iostream>
 
-TEST(SmartVectorTest, DefaultConstructorNoThrow)
+template <typename TypeT>
+struct SmartVectorTest : public testing::Test
+{
+    static const TypeT data[];
+};
+
+template <>
+const int SmartVectorTest<int>::data[] = {1,2,3,4};
+
+template <>
+const std::string SmartVectorTest<std::string>::data[] = {"1", "2", "3", "someData"};
+
+using Types = ::testing::Types<int, std::string>;
+TYPED_TEST_SUITE(SmartVectorTest, Types);
+
+TYPED_TEST(SmartVectorTest, DefaultConstructorNoThrow)
 {
     EXPECT_NO_THROW(SmartVector<int>());
 }
 
-TEST(SmartVectorTest, ExplicitConstructorNoThrow)
+TYPED_TEST(SmartVectorTest, ExplicitConstructorNoThrow)
 {
     EXPECT_NO_THROW(SmartVector<int>(2));
 }
 
-TEST(SmartVectorTest, InsertWithDefaultAllocation)
+TYPED_TEST(SmartVectorTest, InsertWithDefaultAllocation)
 {
-    SmartVector<int> vec{};
-    vec.insert(1);
-    EXPECT_EQ(1, vec[0]);
+    SmartVector<TypeParam> vec{};
+    vec.insert(TestFixture::data[0]);
+    EXPECT_EQ(TestFixture::data[0], vec[0]);
 }
 
-TEST(SmartVectorTest, InsertWithCustomAllocation)
+TYPED_TEST(SmartVectorTest, InsertWithCustomAllocation)
 {
-    auto vec {SmartVector<int>(1)};
-    vec.insert(1);
-    EXPECT_EQ(1, vec[0]);
+    auto vec {SmartVector<TypeParam>(1)};
+    vec.insert(TestFixture::data[0]);
+    EXPECT_EQ(TestFixture::data[0], vec[0]);
 }
 
-TEST(SmartVectorTest, Size)
+TYPED_TEST(SmartVectorTest, Size)
 {
-    SmartVector<int> vec(1);
-    vec.insert(1);
+    SmartVector<TypeParam> vec(1);
+    vec.insert(TestFixture::data[0]);
     EXPECT_EQ(1, vec.size());
 }
 
-TEST(SmartVectorTest, listInitializator)
+TYPED_TEST(SmartVectorTest, listInitializator)
 {
-    SmartVector<int> vec {1,2,3,4};
-    EXPECT_EQ(1, vec[0]);
+    SmartVector<TypeParam> vec {TestFixture::data[0], TestFixture::data[1], TestFixture::data[2], TestFixture::data[3]};
+    EXPECT_EQ(TestFixture::data[0], vec[0]);
     EXPECT_EQ(vec.size(), 4);
 }
 
-TEST(SmartVectorTest, string)
+TYPED_TEST(SmartVectorTest, InsertWithAllocationDuringInsert)
 {
-    SmartVector<std::string> vec {"hello"};
-    EXPECT_EQ(1, vec.size());
+    auto vec {SmartVector<TypeParam>(1)};
+    vec.insert(TestFixture::data[0]);
+    vec.insert(TestFixture::data[1]);
+    vec.insert(TestFixture::data[2]);
+    EXPECT_EQ(TestFixture::data[2], vec[2]);
 }
 
-TEST(SmartVectorTest, InsertWithAllocationDuringInsert)
+TYPED_TEST(SmartVectorTest, CopyConstructor)
 {
-    auto vec {SmartVector<int>(1)};
-    vec.insert(1);
-    vec.insert(1);
-    vec.insert(5);
-    EXPECT_EQ(5, vec[2]);
-}
+    SmartVector<TypeParam> vec(3);
+    vec.insert(TestFixture::data[0]);
+    vec.insert(TestFixture::data[1]);
+    vec.insert(TestFixture::data[2]);
 
-TEST(SmartVectorTest, CopyConstructor)
-{
-    SmartVector<int> vec(3);
-    vec.insert(1);
-    vec.insert(1);
-    vec.insert(5);
+    const auto vec2 {vec};
 
-    auto vec2 {vec};
     EXPECT_EQ(vec, vec2);
 }
 
-TEST(SmartVectorTest, MoveConstructor)
+TYPED_TEST(SmartVectorTest, MoveConstructor)
 {
-    auto vec {SmartVector<int>(1)};
-    vec.insert(1);
-    vec.insert(1);
-    vec.insert(5);
+    SmartVector<TypeParam> vec(3);
+    vec.insert(TestFixture::data[0]);
+    vec.insert(TestFixture::data[1]);
+    vec.insert(TestFixture::data[2]);
 
     auto vec2 = std::move(vec);
-    EXPECT_EQ(1, vec2[0]);
-    EXPECT_EQ(1, vec2[1]);
-    EXPECT_EQ(5, vec2[2]);
+    EXPECT_EQ(TestFixture::data[0], vec2[0]);
+    EXPECT_EQ(TestFixture::data[1], vec2[1]);
+    EXPECT_EQ(TestFixture::data[2], vec2[2]);
 }
 
-TEST(SmartVectorTest, CopyAssignment)
+TYPED_TEST(SmartVectorTest, CopyAssignment)
 {
-    SmartVector<int> vec(3);
-    vec.insert(1);
-    vec.insert(1);
-    vec.insert(5);
+    SmartVector<TypeParam> vec(3);
+    vec.insert(TestFixture::data[0]);
+    vec.insert(TestFixture::data[1]);
+    vec.insert(TestFixture::data[2]);
 
     const auto vec2 = vec;
 
     EXPECT_EQ(vec, vec2);
 }
 
-TEST(SmartVectorTest, NotEqual)
+TYPED_TEST(SmartVectorTest, NotEqual)
 {
-    SmartVector<int> vec(3);
-    vec.insert(1);
-    vec.insert(1);
-    vec.insert(5);
+    SmartVector<TypeParam> vec(3);
+    vec.insert(TestFixture::data[0]);
+    vec.insert(TestFixture::data[1]);
+    vec.insert(TestFixture::data[2]);
 
-    SmartVector<int> vec2 = vec;
+    auto vec2 = vec;
+    vec2.insert(TestFixture::data[3]);
 
-    vec2.insert(5);
     EXPECT_NE(vec, vec2);
 }

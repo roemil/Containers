@@ -5,17 +5,17 @@
 
 TEST(ArrayTest, ctor)
 {
-    const std::size_t size = 2;
+    constexpr std::size_t size = 2;
     Array<int, size> arr;
     static_assert(arr.size() == size);
 }
 
 TEST(ArrayTest, rangeBasedLoop)
 {
-    const std::size_t size = 5;
-    Array<int, size> arr{1,2,3,4,5};
+    constexpr std::size_t size = 5;
+    constexpr Array<int, size> arr{1,2,3,4,5};
     std::size_t cnt = 0;
-    for(const auto& elem : arr)
+    for(const auto elem : arr)
     {
         EXPECT_EQ(elem, arr[cnt++]);
     }
@@ -23,8 +23,8 @@ TEST(ArrayTest, rangeBasedLoop)
 
 TEST(ArrayTest, at)
 {
-    const std::size_t size = 5;
-    Array<int, size> arr{1,2,3,4,5};
+    constexpr std::size_t size = 5;
+    constexpr Array<int, size> arr{1,2,3,4,5};
     std::size_t cnt = 0;
     for(const auto& elem : arr)
     {
@@ -32,45 +32,44 @@ TEST(ArrayTest, at)
     }
 }
 
-TEST(ArrayTest, atConst)
-{
-    const std::size_t size = 5;
-    Array<int, size> arr{1,2,3,4,5};
-    EXPECT_EQ(1, arr.at(0));
-}
-
 TEST(ArrayTest, front)
 {
-    const std::size_t size = 5;
-    Array<int, size> arr{1,2,3,4,5};
+    constexpr std::size_t size = 5;
+    constexpr Array<int, size> arr{1,2,3,4,5};
     EXPECT_EQ(1, arr.front());
 }
 
 TEST(ArrayTest, back)
 {
-    const std::size_t size = 5;
-    Array<int, size> arr{1,2,3,4,5};
+    constexpr std::size_t size = 5;
+    constexpr Array<int, size> arr{1,2,3,4,5};
     EXPECT_EQ(5, arr.back());
 }
 
-TEST(ArrayTest, empty)
+TEST(ArrayTest, isEmpty)
 {
-    const std::size_t size = 0;
-    Array<int, size> arr{};
+    constexpr std::size_t size = 0;
+    constexpr Array<int, size> arr{};
     EXPECT_TRUE(arr.empty());
+}
+
+TEST(ArrayTest, notEmpty)
+{
+    constexpr std::size_t size = 1;
+    constexpr Array<int, size> arr{1};
+    EXPECT_FALSE(arr.empty());
 }
 
 TEST(ArrayTest, data)
 {
-    const std::size_t size = 2;
-    Array<int, size> arr{1,2};
-    auto data = arr.data();
-    EXPECT_EQ(1, data[0]);
+    constexpr std::size_t size = 2;
+    constexpr Array<int, size> arr{1,2};
+    EXPECT_EQ(1, *arr.data());
 }
 
 TEST(ArrayTest, swap)
 {
-    const std::size_t size = 2;
+    constexpr std::size_t size = 2;
     Array<int, size> arr{1,2};
     Array<int, size> arr2{2,1};
     arr.swap(arr2);
@@ -79,7 +78,7 @@ TEST(ArrayTest, swap)
 
 TEST(ArrayTest, swapOnNonClassFunc)
 {
-    const std::size_t size = 2;
+    constexpr std::size_t size = 2;
     Array<int, size> arr{1,2};
     Array<int, size> arr2{2,1};
     swap(arr, arr2);
@@ -88,39 +87,35 @@ TEST(ArrayTest, swapOnNonClassFunc)
 
 TEST(ArrayTest, equal)
 {
-    const std::size_t size = 3;
-    Array<int, size> arr{1,2,3};
-    Array<int, size> arr2{1,2,3};
-    EXPECT_EQ(arr, arr2);
+    constexpr std::size_t size = 3;
+    constexpr Array<int, size> arr{1,2,3};
+    constexpr Array<int, size> arr2{1,2,3};
+
+    static_assert(arr == arr2, "Arrays not equal");
 }
 
 TEST(ArrayTest, notEqual)
 {
-    const std::size_t size = 3;
-    Array<int, size> arr{1,2,3};
-    Array<int, size> arr2{1,2,4};
-    EXPECT_NE(arr, arr2);
+    constexpr std::size_t size = 3;
+    constexpr Array<int, size> arr{1,2,3};
+    constexpr Array<int, size> arr2{1,2,4};
+
+    static_assert(arr != arr2, "Arrays are equal when expecting not too");
 }
 
 TEST(ArrayTest, copyAssignment)
 {
-    const std::size_t size = 3;
-    Array<int, size> arr{1,2,3};
-    auto arr2 = arr;
-    EXPECT_EQ(arr, arr2);
+    constexpr std::size_t size = 3;
+    constexpr Array<int, size> arr{1,2,3};
+
+    constexpr auto arr2 = arr;
+
+    static_assert(arr == arr2, "Arrays not equal");
 }
 
-TEST(ArrayTest, constCopyAssignment)
+TEST(ArrayTest, fill)
 {
-    const std::size_t size = 3;
-    const Array<int, size> arr{1,2,3};
-    const auto arr2 = arr;
-    EXPECT_EQ(arr, arr2);
-}
-
-TEST(ArrayTest, constFill)
-{
-    const std::size_t size = 3;
+    constexpr std::size_t size = 3;
     Array<int, size> arr;
     arr.fill(3);
     for(const auto& elem : arr)
@@ -131,14 +126,14 @@ TEST(ArrayTest, constFill)
 
 TEST(ArrayTest, size)
 {
-    const std::size_t size = 3;
-    Array<int, size> arr{1,2};
-    EXPECT_EQ(arr.size(), 3);
+    constexpr std::size_t size = 3;
+    constexpr Array<int, size> arr{1,2};
+    static_assert(arr.size() == 3, "Size incorrect");
 }
 
 TEST(ArrayTest, maxSize)
 {
-    const std::size_t size = 3;
-    Array<int, size> arr{1,2};
-    EXPECT_EQ(arr.size(), 3);
+    constexpr std::size_t size = 3;
+    constexpr Array<int, size> arr{1,2};
+    static_assert(arr.maxSize() == 3, "Size incorrect");
 }

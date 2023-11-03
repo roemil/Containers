@@ -1,121 +1,130 @@
-#include <gtest/gtest.h>
 #include "include/vector.h"
+
+#include <array>
 #include <iostream>
 
-TEST(VectorTest, DefaultConstructorNoThrow)
+#include "gtest/gtest.h"
+
+template <typename TypeT>
+struct VectorTest : public testing::Test
 {
-    EXPECT_NO_THROW(Vector<int>());
+    static const TypeT data[];
+};
+
+template <>
+const int VectorTest<int>::data[] = {1,2,3,4};
+
+template <>
+const std::string VectorTest<std::string>::data[] = {"1", "2", "3", "someData"};
+
+using Types = ::testing::Types<int, std::string>;
+TYPED_TEST_SUITE(VectorTest, Types);
+
+TYPED_TEST(VectorTest, DefaultConstructorNoThrow)
+{
+    EXPECT_NO_THROW(Vector<TypeParam>());
 }
 
-TEST(VectorTest, ExplicitConstructorNoThrow)
+TYPED_TEST(VectorTest, ExplicitConstructorNoThrow)
 {
-    EXPECT_NO_THROW(Vector<int>(2));
+    EXPECT_NO_THROW(Vector<TypeParam>(2));
 }
 
-TEST(VectorTest, InsertWithDefaultAllocation)
+TYPED_TEST(VectorTest, InsertWithDefaultAllocation)
 {
-    Vector<int> vec {};
-    vec.insert(1);
-    EXPECT_EQ(1, vec[0]);
+    Vector<TypeParam> vec{};
+    vec.insert(TestFixture::data[0]);
+    EXPECT_EQ(TestFixture::data[0], vec[0]);
 }
 
-TEST(VectorTest, string)
+TYPED_TEST(VectorTest, Size)
 {
-    Vector<std::string> vec {};
-    vec.insert("1");
-    EXPECT_EQ("1", vec[0]);
-}
-
-TEST(VectorTest, listInitializator)
-{
-    Vector<int> vec {1,2,3,4};
-    EXPECT_EQ(1, vec[0]);
-    EXPECT_EQ(vec.size(), 4);
-}
-
-
-TEST(VectorTest, CreateWithValue)
-{
-    Vector<int> vec {1};
-    vec.insert(2);
-    EXPECT_EQ(1, vec[0]);
-}
-
-TEST(VectorTest, Size)
-{
-    Vector<int> vec(1);
-    vec.insert(1);
+    Vector<TypeParam> vec{};
+    vec.insert(TestFixture::data[0]);
     EXPECT_EQ(1, vec.size());
 }
 
-TEST(VectorTest, InsertWithSizeAllocationDuringInsert)
+TYPED_TEST(VectorTest, listInitializator)
 {
-    Vector<int> vec(1);
-    vec.insert(1);
-    vec.insert(1);
-    vec.insert(5);
-    EXPECT_EQ(5, vec[2]);
+    Vector<TypeParam> vec {TestFixture::data[0],TestFixture::data[1],TestFixture::data[2],TestFixture::data[3]};
+    EXPECT_EQ(TestFixture::data[0], vec[0]);
+    EXPECT_EQ(vec.size(), 4);
 }
 
-TEST(VectorTest, CopyConstructor)
+TYPED_TEST(VectorTest, CreateWithValue)
 {
-    Vector<int> vec {};
-    vec.insert(1);
-    vec.insert(1);
-    vec.insert(5);
+    Vector<TypeParam> vec {TestFixture::data[0]};
+    vec.insert(TestFixture::data[1]);
+    EXPECT_EQ(TestFixture::data[0], vec[0]);
+    EXPECT_EQ(TestFixture::data[1], vec[1]);
+}
+
+TYPED_TEST(VectorTest, InsertWithSizeAllocationDuringInsert)
+{
+    Vector<TypeParam> vec(3);
+    vec.insert(TestFixture::data[0]);
+    vec.insert(TestFixture::data[1]);
+    vec.insert(TestFixture::data[2]);
+    EXPECT_EQ(vec[2], vec[2]);
+}
+
+TYPED_TEST(VectorTest, CopyConstructor)
+{
+    Vector<TypeParam> vec{};
+    vec.insert(TestFixture::data[0]);
+    vec.insert(TestFixture::data[1]);
+    vec.insert(TestFixture::data[2]);
 
     auto vec2 {vec};
     EXPECT_EQ(vec, vec2);
 }
 
-TEST(VectorTest, CopyAssignment)
+TYPED_TEST(VectorTest, CopyAssignment)
 {
-    Vector<int> vec {};
-    vec.insert(1);
-    vec.insert(1);
-    vec.insert(5);
+    Vector<TypeParam> vec{};
+    vec.insert(TestFixture::data[0]);
+    vec.insert(TestFixture::data[1]);
+    vec.insert(TestFixture::data[2]);
 
-    Vector<int> vec2;
-
-    vec2 = vec;
+    const auto vec2 = vec;
     EXPECT_EQ(vec, vec2);
 }
 
-TEST(VectorTest, SizeNotEqual)
+TYPED_TEST(VectorTest, SizeNotEqual)
 {
-    Vector<int> vec {};
-    vec.insert(1);
-    vec.insert(1);
-    vec.insert(5);
+    Vector<TypeParam> vec{};
+    vec.insert(TestFixture::data[0]);
+    vec.insert(TestFixture::data[1]);
+    vec.insert(TestFixture::data[2]);
 
-    Vector<int> vec2;
+    Vector<TypeParam> vec2;
 
     vec2 = vec;
-    vec2.insert(5);
+    vec2.insert(TestFixture::data[3]);
     EXPECT_NE(vec.size(), vec2.size());
 }
 
-TEST(VectorTest, rangeBasedLoop)
+TYPED_TEST(VectorTest, rangeBasedLoop)
 {
-    const Vector<int> vec {12,3,4,5};
+    Vector<TypeParam> vec {TestFixture::data[0],TestFixture::data[1],TestFixture::data[2],TestFixture::data[3]};
     int count = 0;
-    for(const auto& elem : vec)
+    for(const auto& elem : TestFixture::data)
     {
         EXPECT_EQ(elem, vec[count++]);
     }
 }
 
-TEST(VectorTest, moveCtor)
+TYPED_TEST(VectorTest, moveCtor)
 {
-    Vector<int> vec {12,3,4,5};
+    Vector<TypeParam> vec {TestFixture::data[0],TestFixture::data[1],TestFixture::data[2],TestFixture::data[3]};
     const auto vCopy = vec;
     const auto v2 {std::move(vec)};
     EXPECT_EQ(v2, vCopy);
 }
 
-TEST(VectorTest, constRangeBasedLoop)
+TYPED_TEST(VectorTest, constRangeBasedLoop)
 {
-    const Vector<int> vec {12,3,4,5};
+    const Vector<TypeParam> vec {TestFixture::data[0],TestFixture::data[1],TestFixture::data[2],TestFixture::data[3]};
     int count = 0;
     for(const auto& elem : vec)
     {

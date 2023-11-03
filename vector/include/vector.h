@@ -5,6 +5,7 @@
 template<class T> class Vector
 {
     public:
+        using value_type = T;
         Vector();
         explicit Vector(const int& n);
         explicit Vector(std::initializer_list<T> l ) : Vector(l.size())

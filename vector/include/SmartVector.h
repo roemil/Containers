@@ -7,11 +7,13 @@
 template<class T> class SmartVector
 {
     public:
+        using value_type = T;
         SmartVector();
         explicit SmartVector(const int& n);
         ~SmartVector();
         SmartVector(const SmartVector& other);
         SmartVector(SmartVector&& other) noexcept(std::is_nothrow_move_constructible_v<T>);
+
         explicit SmartVector(std::initializer_list<T> list ) : SmartVector(list.size())
         {
             for(const auto& elem : list)
