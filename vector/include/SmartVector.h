@@ -1,5 +1,6 @@
 #pragma once
 #include <algorithm>
+#include <iterator>
 #include <memory>
 #include <type_traits>
 #include <iostream>
@@ -14,13 +15,19 @@ template<class T> class SmartVector
         SmartVector(const SmartVector& other);
         SmartVector(SmartVector&& other) noexcept(std::is_nothrow_move_constructible_v<T>);
 
-        explicit SmartVector(std::initializer_list<T> list ) : SmartVector(list.size())
+        explicit SmartVector(std::initializer_list<T> list ) noexcept(std::is_nothrow_constructible_v<T>)
+            : SmartVector(list.size())
         {
-            for(const auto& elem : list)
-            {
-                insert(elem);
-            }
+            std::uninitialized_copy(list.begin(), list.end(), reinterpret_cast<T*>(&data_[0]));
+            size_ = std::distance(list.begin(), list.end());
         };
+
+        template <typename... ArgsT>
+        T& emplace_back(ArgsT&& ...args)
+        {
+            emplace_back_helper(args...);
+            return back();
+        }
 
         T& front()
         {
@@ -39,13 +46,6 @@ template<class T> class SmartVector
             return getElem(size_-1);
         }
 
-        template <typename... ArgsT>
-        T& emplace_back(ArgsT&& ...args)
-        {
-            emplace_back_helper(args...);
-            return back();
-        }
-
         SmartVector& insert(const T& n);
         const int size() const {return size_; };
         T* data()
@@ -57,11 +57,11 @@ template<class T> class SmartVector
             return reinterpret_cast<const T*>(data_.get());
         }
 
-        const T& operator[] (int index) const
+        const T& operator[] (int index) const noexcept
         {
             return *reinterpret_cast<const T*>(&data_[index]);
         }
-        T& operator[] (int index)
+        T& operator[] (int index) noexcept
         {
             return *reinterpret_cast<T*>(&data_[index]);
         }
